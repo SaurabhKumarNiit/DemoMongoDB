@@ -1,6 +1,7 @@
 package com.example.DemoMongoDB.controller;
 
 import com.example.DemoMongoDB.domain.Customer;
+import com.example.DemoMongoDB.exception.CustomerAlreadyExistsException;
 import com.example.DemoMongoDB.exception.CustomerNotFoundException;
 import com.example.DemoMongoDB.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,18 @@ public class CustomerController {
      }
 
      @PostMapping("/customer/")
-     public ResponseEntity<?>insertCustomer(@RequestBody Customer customer)
+     public ResponseEntity<?>insertCustomer(@RequestBody Customer customer) throws CustomerAlreadyExistsException
      {
-         Customer customer1=customerService.saveCustomer(customer);
-         return new ResponseEntity<>(customer, HttpStatus.CREATED);
+         ResponseEntity responseEntity = null;
+         try {
+             Customer customer1 = customerService.saveCustomer(customer);
+             responseEntity = new ResponseEntity<>(customer, HttpStatus.CREATED);
+         }catch (CustomerAlreadyExistsException e){
+
+             throw new CustomerAlreadyExistsException();
+
+         }
+         return responseEntity;
      }
 
      @GetMapping("/customers/")

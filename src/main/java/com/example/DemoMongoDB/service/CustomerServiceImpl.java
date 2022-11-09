@@ -1,6 +1,7 @@
 package com.example.DemoMongoDB.service;
 
 import com.example.DemoMongoDB.domain.Customer;
+import com.example.DemoMongoDB.exception.CustomerAlreadyExistsException;
 import com.example.DemoMongoDB.exception.CustomerNotFoundException;
 import com.example.DemoMongoDB.repository.CustomerRepository;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class CustomerServiceImpl implements CustomerService{
         this.customerRepository=customerRepository;
     }
     @Override
-    public Customer saveCustomer(Customer customer) {
+    public Customer saveCustomer(Customer customer) throws CustomerAlreadyExistsException {
         return customerRepository.save(customer);
     }
 

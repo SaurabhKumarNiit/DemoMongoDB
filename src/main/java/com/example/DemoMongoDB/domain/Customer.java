@@ -56,4 +56,11 @@ public class Customer {
                 ", address=" + address +
                 '}';
     }
+
+    public Customer(int customerId, String customerName, String email, Address address) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.email = email;
+        this.address = address;
+    }
 }

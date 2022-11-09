@@ -51,4 +51,11 @@ public class Address {
                 ", zipcode='" + zipcode + '\'' +
                 '}';
     }
+
+    public Address(String city, String state, String country, String zipcode) {
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.zipcode = zipcode;
+    }
 }
