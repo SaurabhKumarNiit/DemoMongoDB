@@ -25,7 +25,7 @@ public class CustomerController {
          ResponseEntity responseEntity = null;
          try {
              Customer customer1 = customerService.saveCustomer(customer);
-             responseEntity = new ResponseEntity<>(customer, HttpStatus.CREATED);
+             responseEntity = new ResponseEntity<>(customer1, HttpStatus.CREATED);
          }catch (CustomerAlreadyExistsException e){
 
              throw new CustomerAlreadyExistsException();

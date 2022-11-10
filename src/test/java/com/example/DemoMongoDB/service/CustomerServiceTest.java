@@ -1,6 +1,7 @@
 package com.example.DemoMongoDB.service;
 
 import com.example.DemoMongoDB.exception.CustomerAlreadyExistsException;
+import com.example.DemoMongoDB.exception.CustomerNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -39,8 +41,8 @@ public class CustomerServiceTest {
     {
         address1=new Address("Pune","MH","India","25643");
         address2=new Address("Bhopal","MP","India","65239");
-        customer1=new Customer(102,"Jagga","Jagga@gmail.com",address1);
-        customer2=new Customer(111,"Bala","Bala@gmail.com",address2);
+        customer1=new Customer(102,"Alice","Alice@gmail.com",address1);
+        customer2=new Customer(111,"Jordan","Jordan@gmail.com",address2);
 
         customerList= Arrays.asList(customer1,customer2);
     }
@@ -53,11 +55,30 @@ public class CustomerServiceTest {
     @Test
     public void givenCustomerToSaveData() throws CustomerAlreadyExistsException
     {
-        when(customerRepository.findById(customer1.getCustomerId())).thenReturn(Optional.ofNullable(null));
+       when(customerRepository.findById(customer1.getCustomerId())).thenReturn(Optional.ofNullable(null));
         when(customerRepository.save(any())).thenReturn(customer1);
         assertEquals(customer1,customerService.saveCustomer(customer1));
         verify(customerRepository,times(1)).save(any());
         verify(customerRepository,times(1)).findById(any());
     }
+
+    @Test
+    public void givenCustomerToSaveReturnCustomerFailure(){
+        when(customerRepository.findById(customer1.getCustomerId())).thenReturn(Optional.ofNullable(customer1));
+        assertThrows(CustomerAlreadyExistsException.class,()->customerService.saveCustomer(customer1));
+        verify(customerRepository,times(0)).save(any());
+        verify(customerRepository,times(1)).findById(any());
+    }
+
+    @Test
+    public void givenCustomerToDeleteShouldDeleteSuccess() throws CustomerNotFoundException {
+        when(customerRepository.findById(customer1.getCustomerId())).thenReturn(Optional.ofNullable(customer1));
+        boolean flag = customerService.deleteCustomer(customer1.getCustomerId());
+        assertEquals(true,flag);
+
+        verify(customerRepository,times(1)).deleteById(any());
+        verify(customerRepository,times(1)).findById(any());
+    }
+
 
 }

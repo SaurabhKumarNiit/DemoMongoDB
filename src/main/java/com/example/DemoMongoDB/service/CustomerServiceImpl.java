@@ -20,6 +20,9 @@ public class CustomerServiceImpl implements CustomerService{
     }
     @Override
     public Customer saveCustomer(Customer customer) throws CustomerAlreadyExistsException {
+        if(customerRepository.findById(customer.getCustomerId()).isPresent()){
+            throw new CustomerAlreadyExistsException();
+        }
         return customerRepository.save(customer);
     }
 
